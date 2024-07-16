@@ -1,5 +1,7 @@
 
 import 'package:clickaeventpr/screen/main%20manu/calander.dart';
+import 'package:clickaeventpr/screen/main%20manu/checkList.dart';
+import 'package:clickaeventpr/screen/main%20manu/event.dart';
 import 'package:clickaeventpr/screen/main%20manu/home.dart';
 import 'package:clickaeventpr/screen/main%20manu/sub%20manu/share.dart';
 import 'package:clickaeventpr/screen/onborading/complete_profile_screen.dart';
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
        title: "Click A Event",
-       initialRoute :'/Homepage',
+       initialRoute :'/Calendar',
        routes:{
 
          '/splashScreen':(context)=> const SplashScreen(),
@@ -45,10 +47,12 @@ class MyApp extends StatelessWidget {
          '/emailVerification':(context)=> const CompleteProfileScreen(),
          '/profilePage':(context)=> ProfilePage(),
          '/Navbar':(context)=> const Navbar(),
-         '/Calendar':(context)=> Calendar(),
+         '/Calendar':(context)=> const Calendar(),
          '/share':(context)=> const Share(),
          '/settings':(context)=> const Settings(),
          '/Homepage':(context)=> const Home(),
+         '/Check':(context)=> const CheckList(),
+         '/Event':(context)=>  Event(),
 
        }
 

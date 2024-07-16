@@ -23,7 +23,7 @@ class _SettingsState extends State<Settings> {
        leading: IconButton(
          onPressed: (){
            Navigator.of(context).push(MaterialPageRoute(builder:
-           (BuildContext context)=>Home()));
+           (BuildContext context)=>const Home()));
          },
          icon: const Icon(Icons.arrow_back),
        ),

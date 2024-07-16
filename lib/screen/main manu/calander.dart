@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:clickaeventpr/screen/main%20manu/home.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -130,6 +131,14 @@ class _CalendarState extends State<Calendar> {
         title: Text("Event Calendar"),
         backgroundColor: Colors.red,
         centerTitle: true,
+        elevation: 1,
+        leading: IconButton(
+          onPressed: (){
+            Navigator.of(context).push(MaterialPageRoute(builder:
+                (BuildContext context)=>Home()));
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
       ),
       body: Column(
         children: [

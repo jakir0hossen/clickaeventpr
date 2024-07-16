@@ -35,6 +35,7 @@ class _BudgetPageState extends State<BudgetPage> {
         backgroundColor: Colors.red,
         title: Text('Budget Page'),
         centerTitle: true,
+
       ),
       body: BodyBackground(
         child: Column(

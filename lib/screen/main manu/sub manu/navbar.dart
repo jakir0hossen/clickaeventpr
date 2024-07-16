@@ -1,4 +1,5 @@
 
+import 'package:clickaeventpr/Setting/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -67,7 +68,9 @@ class Navbar extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.settings),
             title: Text("Settings"),
-            onTap: () {},
+            onTap: () {
+
+            },
           ),
           ListTile(
             leading: Icon(Icons.file_copy),

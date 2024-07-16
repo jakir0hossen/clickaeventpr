@@ -1,231 +1,182 @@
-
-import 'package:flutter/cupertino.dart';
+import 'package:clickaeventpr/screen/main%20manu/home.dart';
+import 'package:clickaeventpr/screen/widgets/bodyBackground.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/bodyBackground.dart';
-
-class CheckList extends StatefulWidget {
+class CheckList  extends StatelessWidget {
   const CheckList({Key? key}) : super(key: key);
 
   @override
-  State<CheckList> createState() => _CheckListState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+
+      theme: ThemeData(
+        // enable Material 3
+        useMaterial3: true,
+
+      ),
+      home: const HomePage(),
+    );
+  }
 }
 
-class _CheckListState extends State<CheckList> {
-  List<Item> items = []; // List to store added items
+// Multi Select widget
+// This widget is reusable
+class MultiSelect extends StatefulWidget {
+  final List<String> items;
+  const MultiSelect({Key? key, required this.items}) : super(key: key);
 
-  // Function to add a new item
-  void _addItem(String title) {
+  @override
+  State<StatefulWidget> createState() => _MultiSelectState();
+}
+
+class _MultiSelectState extends State<MultiSelect> {
+  // this variable holds the selected items
+  final List<String> _selectedItems = [];
+
+// This function is triggered when a checkbox is checked or unchecked
+  void _itemChange(String itemValue, bool isSelected) {
     setState(() {
-      items.add(Item(title: title, isChecked: false));
+      if (isSelected) {
+        _selectedItems.add(itemValue);
+      } else {
+        _selectedItems.remove(itemValue);
+      }
     });
   }
 
-  // Function to show a snackbar
-  void _showSnackbar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 2),
+  // this function is called when the Cancel button is pressed
+  void _cancel() {
+    Navigator.pop(context);
+  }
+
+// this function is called when the Submit button is tapped
+  void _submit() {
+    Navigator.pop(context, _selectedItems);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Select Topics'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: widget.items
+              .map((item) => CheckboxListTile(
+            value: _selectedItems.contains(item),
+            title: Text(item),
+            controlAffinity: ListTileControlAffinity.leading,
+            onChanged: (isChecked) => _itemChange(item, isChecked!),
+          ))
+              .toList(),
+        ),
       ),
+      actions: [
+        TextButton(
+          onPressed: _cancel,
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: _submit,
+          child: const Text('Submit'),
+        ),
+      ],
     );
+  }
+}
+
+// Implement a multi select on the Home screen
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<String> _selectedItems = [];
+
+  void _showMultiSelect() async {
+    // a list of selectable items
+    // these items can be hard-coded or dynamically fetched from a database/API
+    final List<String> items = [
+      'Food & Drink',
+      'Floral Design',
+      'Place Cards',
+      'Dancer Floors',
+      'Bouquets',
+      'Lighting',
+      'Wedding Planners',
+      'Decor Companies',
+      'Wedding Florists',
+      'DJs & Bands',
+      'Photographers',
+      'Tent Companies',
+      'Rental Companies',
+      'Bakeries',
+      'Videographers'
+    ];
+
+    final List<String>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(items: items);
+      },
+    );
+
+    // Update UI
+    if (results != null) {
+      setState(() {
+        _selectedItems = results;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('ClickAEvent'),
         backgroundColor: Colors.red,
-        title: Text("CheckList"),
         centerTitle: true,
+        elevation: 1,
+        leading: IconButton(
+          onPressed: (){
+            Navigator.of(context).push(MaterialPageRoute(builder:
+                (BuildContext context)=>Home()));
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
       ),
       body: BodyBackground(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(30),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                "Event CheckList",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 35,
-                  fontWeight: FontWeight.bold,
-                ),
+              // use this button to open the multi-select dialog
+              ElevatedButton(
+                onPressed: _showMultiSelect,
+                child: const Text('CheckList Wedding Party , Birthday Party , Anniversary Party',
+                  style:TextStyle(fontSize:20,color: Colors.black,backgroundColor: Colors.white),
+                  textAlign: TextAlign.center,),
+
               ),
-              SizedBox(height: 20),
-              // Display existing items
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: items.map((item) {
-                  return Row(
-                    children: [
-                      Checkbox(
-                        value: item.isChecked,
-                        onChanged: (value) {
-                          setState(() {
-                            item.isChecked = value!;
-                            if (value) {
-                              _showSnackbar("${item.title} is checked.");
-                            }
-                          });
-                        },
-                      ),
-                      Text(
-                        item.title,
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                      )
-                    ],
-                  );
-                }).toList(),
+              const Divider(
+                height: 35,
               ),
+              // display selected items
+              Wrap(
+                children: _selectedItems
+                    .map((e) => Chip(
+                  label: Text(e),
+                ))
+                    .toList(),
+              )
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Show dialog to get title from user
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              String newTitle = '';
-              return AlertDialog(
-                title: Text("Add Item"),
-                content: TextField(
-                  onChanged: (value) {
-                    newTitle = value;
-                  },
-                  decoration: InputDecoration(
-                    hintText: "Enter title",
-                  ),
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      if (newTitle.isNotEmpty) {
-                        _addItem(newTitle);
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: Text('Add'),
-                  ),
-                ],
-              );
-            },
-          );
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.red,
-      ),
     );
   }
 }
-
-class Item {
-  String title;
-  bool isChecked;
-
-  Item({required this.title, required this.isChecked});
-}
-
-
-
-
-// import 'package:clickaeventsp/screen/widgets/bodyBackground.dart';
-// import 'package:flutter/material.dart';
-//
-// class CheckList extends StatefulWidget {
-//   const CheckList({super.key});
-//
-//   @override
-//   State<CheckList> createState() => _CheckListState();
-// }
-//
-// class _CheckListState extends State<CheckList> {
-//   bool firstValue = false;
-//   bool secondValue = false;
-//   bool thirdValue = false;
-//   bool fouthValue = false;
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.red,
-//         title: const Text("CheckList"),
-//         centerTitle: true,
-//       ),
-//       body: BodyBackground(
-//         child: Padding(
-//           padding: EdgeInsets.all(20),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               const Text(
-//                 "Event CheckList",
-//                 style: TextStyle(
-//                     color: Colors.black,
-//                     fontSize: 20,
-//                     fontWeight: FontWeight.bold),
-//               ),
-//               SizedBox(
-//                 height: 20,
-//               ),
-//               Row(
-//                 children: [
-//                   Checkbox(
-//                       value: firstValue,
-//                       onChanged: (value) {
-//                         setState(() {
-//                           firstValue = value!;
-//                         });
-//                       }),
-//                   Text("Brithday")
-//                 ],
-//               ),
-//               SizedBox(
-//                 height: 20,
-//               ),
-//               Row(
-//                 children: [
-//                   Checkbox(
-//                       value: secondValue,
-//                       onChanged: (value) {
-//                         setState(() {
-//                           secondValue = value!;
-//                         });
-//                       }),
-//                   Text("Wedding")
-//                 ],
-//               ),
-//               SizedBox(
-//                 height: 20,
-//               ),
-//               Row(
-//                 children: [
-//                   Checkbox(
-//                       value: thirdValue,
-//                       onChanged: (value) {
-//                         setState(() {
-//                           thirdValue = value!;
-//                         });
-//                       }),
-//                   Text("Anniversary")
-//                 ],
-//               ),
-//               SizedBox(
-//                 height: 20,
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
