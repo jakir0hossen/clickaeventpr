@@ -20,6 +20,7 @@ import 'Setting/settings.dart';
 import 'firebase_options.dart';
 
 import 'navbar.dart';
+import 'screen/main manu/sub manu/contactList.dart';
 
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
        title: "Click A Event",
-       initialRoute :'/Calendar',
+       initialRoute :'/Contact',
        routes:{
 
          '/splashScreen':(context)=> const SplashScreen(),
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
          '/Homepage':(context)=> const Home(),
          '/Check':(context)=> const CheckList(),
          '/Event':(context)=>  Event(),
+         '/Contact':(context)=>  const contactList(),
 
        }
 

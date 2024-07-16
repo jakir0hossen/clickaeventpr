@@ -8,7 +8,7 @@ import '../screen/main manu/checkList.dart';
 import '../screen/main manu/event.dart';
 import '../screen/main manu/guestsPage.dart';
 import '../screen/main manu/searchBar.dart';
-import '../screen/main manu/sub manu/eventSchedulePage.dart';
+import '../screen/main manu/sub manu/contactList.dart';
 import '../screen/widgets/bodyBackground.dart';
 import '../style/style.dart';
 
@@ -184,7 +184,7 @@ class _DeshbordState extends State<Deshbord> {
             InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                  return const EventSchedulePage();
+                  return const contactList();
                 }));
               },
               child: Container(
